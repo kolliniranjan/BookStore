@@ -82,3 +82,46 @@ exports.deleteBook = async (req, res) => {
         });
     }
 };
+exports.searchBooks = async (req, res) => {
+    try {
+
+        const { title, author, genre, minPrice, maxPrice } = req.query;
+
+        let query = {};
+
+        if (title) {
+            query.title = { $regex: title, $options: "i" };
+        }
+
+        if (author) {
+            query.author = { $regex: author, $options: "i" };
+        }
+
+        if (genre) {
+            query.genre = genre;
+        }
+
+        if (minPrice || maxPrice) {
+            query.price = {};
+
+            if (minPrice) {
+                query.price.$gte = Number(minPrice);
+            }
+
+            if (maxPrice) {
+                query.price.$lte = Number(maxPrice);
+            }
+        }
+
+        const books = await Book.find(query);
+
+        res.json(books);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+};

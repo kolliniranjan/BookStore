@@ -1,3 +1,5 @@
+const protect = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware");
 const express = require("express");
 const router = express.Router();
 
@@ -6,13 +8,20 @@ const {
     getBooks,
     getBookById,
     updateBook,
-    deleteBook
+    deleteBook,
+    searchBooks
 } = require("../controllers/bookController");
 
-router.post("/", addBook);
+router.post("/", protect, admin, addBook);
+
 router.get("/", getBooks);
+
+router.get("/search", searchBooks);   
+
 router.get("/:id", getBookById);
-router.put("/:id", updateBook);
-router.delete("/:id", deleteBook);
+
+router.put("/:id", protect, admin, updateBook);
+
+router.delete("/:id", protect, admin, deleteBook);
 
 module.exports = router;
