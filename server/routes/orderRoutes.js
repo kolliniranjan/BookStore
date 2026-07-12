@@ -8,13 +8,15 @@ const {
     placeOrder,
     getMyOrders,
     getOrderById,
-    updateOrderStatus
+    updateOrderStatus,
+    getAllOrders
 } = require("../controllers/orderController");
 
 const admin = require("../middleware/adminMiddleware");
 
 router.post("/", protect, placeOrder);
 router.get("/", protect, getMyOrders);
+router.get("/admin/all", protect, admin, getAllOrders);
 router.get("/:id", protect, getOrderById);
 router.put("/:id/status", protect, admin, updateOrderStatus);
 
